@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+    <title>Приложение  "Прогноз погоды"</title>
+</head>
+<body>
+    <h1>Приложение  "Прогноз погоды"</h1>
+    <form method="POST">
+        <label for="city">Город:</label>
+        <input type="text" id="city" name="city">
+        <button type="submit">Посмотреть погоду</button>
+    </form>
+    {% if error_message %}
+        <div class="alert alert-danger">
+            {{ error_message }}
+        </div>
+    {% endif %}
+        {% if current_data %}
+           <div class="current">
+               <h2>Текущая погода {{ city }}</h2>
+            <p>День: {{ current_data.date }} </p>
+            <p>Температура: {{ current_data.temperature }} °C</p>
+            <p>Влажность: {{ current_data.humidity }} %</p>
+            <p>Ощущаемая температура: {{ current_data.apparent_temperature }} °C</p>
+            <p>День: {{ current_data.is_day }}</p>
+            <p>Осадки: {{ current_data.precipitation }} мм</p>
+            <p>Направление ветра: {{ current_data.wind_direction }} °</p>
+            <p>Скорость ветра: {{ current_data.wind_speed }} м/с</p>
+           </div>
+        {% endif %}
+
+        {% if hourly_data %}
+        <h2>Погода каждый час</h2>
+        <div class="hourly">
+            {% for i in range(hourly_data.date.size) %}
+            <div class="hourly_i">
+                <p>Время: {{ hourly_data.date[i] }}</p>
+                <p>Температура: {{ hourly_data.temperature_2m[i] }} °C</p>
+                <p>Осадки: {{ hourly_data.precipitation[i] }} мм</p>
+           </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if daily_data %}
+        <h2>Погода каждый день</h2>
+        <div class="daily">
+            {% for i in range(daily_data.date.size) %}
+            <div class="daily_i">
+                <p>День: {{ daily_data.date[i] }}</p>
+                <p>Минимальная температура: {{ daily_data.temperature_2m_min[i] }} °C</p>
+                <p>Максимальная температура: {{ daily_data.temperature_2m_max[i] }} %</p>
+                <p>Вероятность осадков: {{ daily_data.precipitation_probability_max[i] }} °C</p>
+           </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
